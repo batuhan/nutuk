@@ -4,17 +4,19 @@ import { useRef } from "react";
 import { useChat } from "ai/react";
 import va from "@vercel/analytics";
 import clsx from "clsx";
-import { VercelIcon, GithubIcon, LoadingCircle, SendIcon } from "./icons";
+import { VercelIcon, GithubIcon, LoadingCircle, SendIcon, TwitterIcon } from "./icons";
 import { Bot, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Textarea from "react-textarea-autosize";
 import { toast } from "sonner";
+import Image from "next/image";
+import logoPicture from './ataturk-logo.png';
 
 const examples = [
-  "Get me the top 5 stories on Hacker News in markdown table format. Use columns like title, link, score, and comments.",
-  "Summarize the comments in the top hacker news story.",
-  "What is the top story on Hacker News right now?",
+  "Nutuk ne anlatmaktadır?",
+  "Atatürk'ün Nutukta gençliğe mesajı nedir?",
+  "Nutuk'a göre kurtuluş savaşı ne gibi şartlarda yapılmıştır?",
 ];
 
 export default function Chat() {
@@ -24,7 +26,7 @@ export default function Chat() {
   const { messages, input, setInput, handleSubmit, isLoading } = useChat({
     onResponse: (response) => {
       if (response.status === 429) {
-        toast.error("You have reached your request limit for the day.");
+        toast.error("Günlük limitinize ulaştınız.");
         va.track("Rate limited");
         return;
       } else {
@@ -45,18 +47,19 @@ export default function Chat() {
     <main className="flex flex-col items-center justify-between pb-40">
       <div className="absolute top-5 hidden w-full justify-between px-5 sm:flex">
         <a
-          href="/deploy"
+          href="/"
           target="_blank"
-          className="rounded-lg p-2 transition-colors duration-200 hover:bg-stone-100 sm:bottom-auto"
+          className="rounded-lg p-2 transition-border transition-shadow duration-200 hover:border-stone-100 hover:shadow sm:bottom-auto"
         >
-          <VercelIcon />
+          
+          <Image src={logoPicture} width={30} height={30} alt="ataturk-logo" />
         </a>
         <a
-          href="/github"
+          href="https://twitter.com/batuhan"
           target="_blank"
-          className="rounded-lg p-2 transition-colors duration-200 hover:bg-stone-100 sm:bottom-auto"
+          className="rounded-lg p-2 transition-colors duration-200 hover:bg-stone-100 w-10 h-10"
         >
-          <GithubIcon />
+          <TwitterIcon  />
         </a>
       </div>
       {messages.length > 0 ? (
@@ -99,47 +102,36 @@ export default function Chat() {
       ) : (
         <div className="border-gray-200sm:mx-0 mx-5 mt-20 max-w-screen-md rounded-md border sm:w-full">
           <div className="flex flex-col space-y-4 p-7 sm:p-10">
-            <h1 className="text-lg font-semibold text-black">
-              Welcome to ChatHN!
-            </h1>
+            <h1 className="text-lg font-semibold text-black">Nutuk'a sor !</h1>
             <p className="text-gray-500">
-              This is an{" "}
+              Bu proje, Atatürk'ün Nutuk'una soru sorabileceğiniz bir{" "}
               <a
-                href="https://github.com/steven-tey/chathn"
+                href="https://github.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium underline underline-offset-4 transition-colors hover:text-black"
               >
-                open-source
+                açık-kaynak
               </a>{" "}
-              AI chatbot that uses{" "}
+              AI chatbot uygulamasıdır. Bu projede OpenAI için{" "}
               <a
-                href="https://platform.openai.com/docs/guides/gpt/function-calling"
+                href="https://js.langchain.com/docs/get_started/introduction"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium underline underline-offset-4 transition-colors hover:text-black"
               >
-                OpenAI Functions
+                Langchain.js
               </a>{" "}
-              and{" "}
+              ve memory için{" "}
               <a
-                href="https://sdk.vercel.ai/docs"
+                href="https://www.pinecone.io/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium underline underline-offset-4 transition-colors hover:text-black"
               >
-                Vercel AI SDK
+                Pinecone
               </a>{" "}
-              to interact with the{" "}
-              <a
-                href="https://github.com/HackerNews/API"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium underline underline-offset-4 transition-colors hover:text-black"
-              >
-                Hacker News API
-              </a>{" "}
-              with natural language.
+              kullanılmıştır.
             </p>
           </div>
           <div className="flex flex-col space-y-4 border-t border-gray-200 bg-gray-50 p-7 sm:p-10">
@@ -158,6 +150,13 @@ export default function Chat() {
           </div>
         </div>
       )}
+      {isLoading && (
+        <div className="fixed bottom-[100px] flex flex-col items-center space-y-3 p-5 pb-3 sm:px-0">
+          <div className="relative w-full flex items-center gap-2 text-gray-600 max-w-screen-md rounded-xl border border-gray-200 bg-white px-4 py-1 shadow-lg">
+            <LoadingCircle /> Cevap Oluşturuluyor...
+          </div>
+        </div>
+      )}
       <div className="fixed bottom-0 flex w-full flex-col items-center space-y-3 bg-gradient-to-b from-transparent via-gray-100 to-gray-100 p-5 pb-3 sm:px-0">
         <form
           ref={formRef}
@@ -170,7 +169,7 @@ export default function Chat() {
             required
             rows={1}
             autoFocus
-            placeholder="Send a message"
+            placeholder="Bir soru sorun..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
@@ -206,41 +205,31 @@ export default function Chat() {
         <p className="text-center text-xs text-gray-400">
           Built with{" "}
           <a
-            href="https://platform.openai.com/docs/guides/gpt/function-calling"
+            href="https://js.langchain.com/docs/get_started/introduction"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-black"
           >
-            OpenAI Functions
+            Langchain.js
           </a>{" "}
           and{" "}
           <a
-            href="https://sdk.vercel.ai/docs"
+            href="https://www.pinecone.io/"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-black"
           >
-            Vercel AI SDK
+            Pinecone DB
           </a>
-          .{" "}
+          . An AI Chatbot using{" "}
           <a
-            href="https://github.com/steven-tey/chathn"
+            href="https://openai.com/"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-black"
           >
-            View the repo
-          </a>{" "}
-          or{" "}
-          <a
-            href="https://vercel.com/templates/next.js/chathn"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="transition-colors hover:text-black"
-          >
-            deploy your own
+            OpenAI.
           </a>
-          .
         </p>
       </div>
     </main>
