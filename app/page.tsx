@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useChat } from "ai/react";
 import va from "@vercel/analytics";
 import clsx from "clsx";
-import { VercelIcon, GithubIcon, LoadingCircle, SendIcon, TwitterIcon } from "./icons";
+import { LoadingCircle, SendIcon, TwitterIcon } from "./icons";
 import { Bot, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -102,9 +102,9 @@ export default function Chat() {
       ) : (
         <div className="border-gray-200sm:mx-0 mx-5 mt-20 max-w-screen-md rounded-md border sm:w-full">
           <div className="flex flex-col space-y-4 p-7 sm:p-10">
-            <h1 className="text-lg font-semibold text-black">Nutuk'a sor !</h1>
+            <h1 className="text-lg font-semibold text-black">Nutuk&apos;a sor !</h1>
             <p className="text-gray-500">
-              Bu proje, Atatürk'ün Nutuk'una soru sorabileceğiniz bir{" "}
+              Bu proje, Atatürk&apos;ün Nutuk&apos;una soru sorabileceğiniz bir{" "}
               <a
                 href="https://github.com/"
                 target="_blank"
